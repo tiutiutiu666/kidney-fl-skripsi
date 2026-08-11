@@ -1,0 +1,31 @@
+skenario,alpha,klien,Cyst,Normal,Stone,Tumor,total
+I - acak per citra,0.1,1,2967,4061,1,1826,8855
+I - acak per citra,0.1,2,0,0,982,0,982
+I - acak per citra,0.1,3,0,0,119,0,119
+I - acak per citra,0.3,1,2963,4032,84,1823,8902
+I - acak per citra,0.3,2,1,22,822,0,845
+I - acak per citra,0.3,3,3,7,196,3,209
+I - acak per citra,0.5,1,2926,3905,144,1783,8758
+I - acak per citra,0.5,2,17,103,718,2,840
+I - acak per citra,0.5,3,24,53,240,41,358
+I - acak per citra,0.7,1,2855,3744,149,1703,8451
+I - acak per citra,0.7,2,49,195,601,11,856
+I - acak per citra,0.7,3,63,122,352,112,649
+I - acak per citra,1.0,1,2814,686,409,596,4505
+I - acak per citra,1.0,2,111,3195,389,1059,4754
+I - acak per citra,1.0,3,42,180,304,171,697
+II - group-aware,0.1,1,2968,4039,1,1379,8387
+II - group-aware,0.1,2,0,0,983,438,1421
+II - group-aware,0.1,3,0,0,119,0,119
+II - group-aware,0.3,1,2906,4010,84,805,7805
+II - group-aware,0.3,2,58,22,823,28,931
+II - group-aware,0.3,3,4,7,196,984,1191
+II - group-aware,0.5,1,2744,3884,145,803,7576
+II - group-aware,0.5,2,188,102,718,108,1116
+II - group-aware,0.5,3,36,53,240,906,1235
+II - group-aware,0.7,1,2598,3723,149,899,7369
+II - group-aware,0.7,2,283,195,601,744,1823
+II - group-aware,0.7,3,87,121,353,174,735
+II - group-aware,1.0,1,2021,423,410,536,3390
+II - group-aware,1.0,2,625,939,388,1240,3192
+II - group-aware,1.0,3,322,2677,305,41,3345

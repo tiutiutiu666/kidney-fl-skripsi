@@ -15,7 +15,7 @@ from src.data.partitioner import dirichlet_partition
 from src.federated.server import run_simulation
 
 # ── GANTI untuk memilih alpha ────────────────────────────────────────────
-ALPHA_TARGET = 0.1   # pilih: 0.1 | 0.3 | 0.5 | 0.7 | 1.0
+ALPHA_TARGET = 1.0   # pilih: 0.1 | 0.3 | 0.5 | 0.7 | 1.0
 # ─────────────────────────────────────────────────────────────────────────────
 
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")

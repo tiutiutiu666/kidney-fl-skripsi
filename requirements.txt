@@ -3,6 +3,7 @@ torchvision
 timm
 flwr[simulation]
 scikit-learn
+scipy
 numpy
 pandas
 matplotlib

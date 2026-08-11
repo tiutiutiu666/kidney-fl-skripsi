@@ -16,5 +16,17 @@
     "metrics": {
       "best_val_f1": 0.706085
     }
+  },
+  "fold_4": {
+    "done": true,
+    "metrics": {
+      "best_val_f1": 0.615209
+    }
+  },
+  "fold_5": {
+    "done": true,
+    "metrics": {
+      "best_val_f1": 0.77863
+    }
   }
 }
