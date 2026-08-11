@@ -1,0 +1,12 @@
+torch
+torchvision
+timm
+flwr[simulation]
+scikit-learn
+numpy
+pandas
+matplotlib
+seaborn
+Pillow
+torchinfo
+grad-cam

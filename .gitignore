@@ -1,0 +1,33 @@
+# Virtual environment
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Data (terlalu besar untuk GitHub)
+# Pakai garis miring di depan agar HANYA folder data/ di root yang diabaikan.
+# Tanpa itu, pola "data/" juga cocok dengan src/data/ sehingga file kode baru
+# di sana ikut terabaikan tanpa peringatan.
+/data/
+
+# Model Weights/Checkpoints (terlalu besar untuk GitHub, dilarang di-upload)
+*.pth
+*.pt
+*.h5
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+miniconda.sh
+
+# Arsip hasil eksperimen (terlalu besar untuk GitHub)
+*.tar.gz
+*.zip
+results_skenario1*/
