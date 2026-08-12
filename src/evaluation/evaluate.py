@@ -15,7 +15,8 @@ from src.models.efficientnet_model import build_model
 from src.data.augmentation import KidneyDataset
 from src.data.preprocessing import get_transforms
 from config import (BATCH_SIZE, NUM_CLASSES, KELAS_LIST,
-                    RESULT_DIR, IMG_SIZE, ALPHAS, K_FOLD)
+                    RESULT_DIR, IMG_SIZE, ALPHAS, K_FOLD,
+                    GROUP_AWARE_SPLIT)
 
 
 def select_best_model(device):
@@ -213,7 +214,20 @@ def evaluate_all_alphas(device, save_dir=None):
     os.makedirs(save_dir, exist_ok=True)
 
     all_paths, all_labels = load_dataset()
-    idx_test = np.load(os.path.join(RESULT_DIR, "test_indices.npy"))
+
+    # Nama berkas indeks uji berbeda per mode split. Tanpa penyesuaian ini,
+    # mode group-aware akan memuat test_indices.npy milik skenario acak —
+    # yang beririsan dengan data latihnya — sehingga metrik menjadi terlalu
+    # optimistis tanpa memunculkan galat apa pun.
+    suffix   = "_group" if GROUP_AWARE_SPLIT else ""
+    idx_path = os.path.join(RESULT_DIR, f"test_indices{suffix}.npy")
+    if not os.path.exists(idx_path):
+        raise FileNotFoundError(
+            f"Berkas indeks uji tidak ditemukan: {idx_path}\n"
+            f"Jalankan pelatihan terlebih dahulu (main.py atau run_alpha.py) "
+            f"agar berkas ini dibuat."
+        )
+    idx_test = np.load(idx_path)
     paths_test, labels_test = all_paths[idx_test], all_labels[idx_test]
 
     _, transform_val = get_transforms()
