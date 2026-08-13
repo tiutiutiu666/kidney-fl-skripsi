@@ -5,7 +5,7 @@ Menjalankan seluruh tahap PASCA-PELATIHAN, tanpa melatih apa pun.
 
 Dipakai apabila pelatihan dilakukan bertahap melalui experiments/run_alpha.py
 (satu nilai alpha per eksekusi), sehingga tahap 4-8 pada main.py belum pernah
-dijalankan. Skrip ini aman dieksekusi kapan saja: ia hanya membaca hasil
+dijalankan. Skrip ini aman dieksekusi kapan saja: hanya membaca hasil
 pelatihan yang sudah ada dan tidak akan memulai pelatihan baru.
 
 Tahapan yang dijalankan:

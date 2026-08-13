@@ -29,7 +29,7 @@ from src.data.preprocessing import get_transforms, GaussianDenoising
 # ╔══════════════════════════════════════════════════════════════════════════════╗
 # ║  GANTI PATH GAMBAR DI SINI                                                ║
 # ╚══════════════════════════════════════════════════════════════════════════════╝
-IMAGE_PATH = r"\P039_FA_M_S_I07_MUL.jpg"
+IMAGE_PATH = r"/root/kidneyfl/P040_FA_M_S_I05_DO.jpg"
 # Contoh:
 # IMAGE_PATH = r"D:\data\test_cyst_001.jpg"
 # IMAGE_PATH = r"D:\KULI AH\888\code\kidney fl\data\raw\CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone\CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone\Cyst\Cyst- (1).jpg"
@@ -278,34 +278,8 @@ def sanity_check_analysis(probs, pred_idx):
     else:
         print("     ✓ Margin besar — prediksi cukup tegas.")
 
-    # 3. Penjelasan tentang akurasi tinggi pada dataset ini
-    print("\n" + "─" * 60)
-    print("  CATATAN TENTANG AKURASI TINGGI (99-100%)")
-    print("─" * 60)
-    print("""
-  Akurasi 99-100% pada CT Kidney Dataset BUKAN indikasi overfitting
-  jika semua langkah berikut dipenuhi:
-
-  ✓ Test set benar-benar terpisah & tidak pernah digunakan saat training
-  ✓ Tidak ada data leakage (gambar pasien yang sama di train & test)
-  ✓ Evaluasi menggunakan macro-average (bukan weighted)
-  ✓ Confusion matrix menunjukkan semua kelas diprediksi dengan baik
-
-  ALASAN akurasi tinggi pada dataset ini:
-  1. Perbedaan visual antar kelas sangat jelas (batu, kista, tumor, normal)
-  2. Dataset sudah dikurasi dengan baik oleh pembuat aslinya
-  3. EfficientNet-B0 pretrained ImageNet sangat kuat untuk image classification
-  4. Dataset ini bukan dataset medis yang sulit (bukan radiomics/segmentasi)
-
-  SARAN untuk validasi tambahan:
-  • Periksa Grad-CAM: apakah model melihat area yang benar (ginjal/lesi)?
-  • Coba gambar dari sumber lain (bukan dari dataset training)
-  • Review confusion matrix untuk pola kesalahan
-""")
-
-
 # ╔══════════════════════════════════════════════════════════════════════════════╗
-# ║  MAIN                                                                      ║
+# ║  MAIN                                                                        ║
 # ╚══════════════════════════════════════════════════════════════════════════════╝
 if __name__ == "__main__":
     print(f"\n{'═'*60}")
