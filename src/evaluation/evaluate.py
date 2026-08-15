@@ -236,7 +236,36 @@ def evaluate_all_alphas(device, save_dir=None):
         batch_size=BATCH_SIZE, shuffle=False, num_workers=0
     )
 
-    rows = []
+    def _uji(model_path):
+        """Evaluasi satu bobot model pada test set."""
+        model = build_model().to(device)
+        model.load_state_dict(torch.load(model_path, map_location=device))
+        model.eval()
+        preds_all, labels_all = [], []
+        with torch.no_grad():
+            for imgs, labels in loader_test:
+                imgs = imgs.to(device)
+                preds_all.extend(model(imgs).argmax(1).cpu().numpy())
+                labels_all.extend(labels.numpy())
+        return {
+            "accuracy":        accuracy_score(labels_all, preds_all),
+            "macro_precision": precision_score(labels_all, preds_all,
+                                               average='macro', zero_division=0),
+            "macro_recall":    recall_score(labels_all, preds_all,
+                                            average='macro', zero_division=0),
+            "macro_f1":        f1_score(labels_all, preds_all,
+                                        average='macro', zero_division=0),
+        }
+
+    METRIK = ["accuracy", "macro_precision", "macro_recall", "macro_f1"]
+
+    # SELURUH fold dievaluasi, bukan hanya fold dengan F1 validasi tertinggi.
+    # Satu model tunggal per alpha terlalu berderau: sebaran antar fold pada
+    # skenario non-IID ekstrem mencapai +/- 0,066, sehingga urutan antar alpha
+    # dapat terbalik hanya karena kebetulan. Rata-rata +/- standar deviasi
+    # lintas fold memberi perbandingan yang jauh lebih stabil sekaligus
+    # menyediakan batas galat untuk pembahasan.
+    baris_fold, baris_ringkas = [], []
     for alpha in ALPHAS:
         alpha_dir   = os.path.join(RESULT_DIR, f"alpha_{alpha}")
         status_path = os.path.join(alpha_dir, "fold_status.json")
@@ -245,59 +274,66 @@ def evaluate_all_alphas(device, save_dir=None):
         with open(status_path) as f:
             status = json.load(f)
 
-        best_fold, best_fold_f1 = None, -1.0
+        hasil_alpha = []
         for fold in range(1, K_FOLD + 1):
             info = status.get(f"fold_{fold}", {})
-            if info.get("done") and info["metrics"]["best_val_f1"] > best_fold_f1:
-                best_fold_f1 = info["metrics"]["best_val_f1"]
-                best_fold    = fold
-        if best_fold is None:
+            if not info.get("done"):
+                continue
+            model_path = os.path.join(alpha_dir, f"fold_{fold}", "best_model.pth")
+            if not os.path.exists(model_path):
+                print(f"  [Lewati] alpha {alpha} fold {fold}: bobot tidak ditemukan")
+                continue
+
+            m = _uji(model_path)
+            m.update({"alpha": alpha, "fold": fold,
+                      "val_f1": info["metrics"]["best_val_f1"]})
+            hasil_alpha.append(m)
+            baris_fold.append(m)
+            print(f"  alpha {alpha} fold {fold}: "
+                  f"acc {m['accuracy']*100:.2f}% | macro-F1 {m['macro_f1']:.4f}")
+
+        if not hasil_alpha:
             continue
 
-        model_path = os.path.join(alpha_dir, f"fold_{best_fold}", "best_model.pth")
-        if not os.path.exists(model_path):
-            continue
+        ringkas = {"alpha": alpha, "n_fold": len(hasil_alpha)}
+        for k in METRIK:
+            v = np.array([h[k] for h in hasil_alpha])
+            ringkas[f"{k}_mean"] = v.mean()
+            ringkas[f"{k}_std"]  = v.std(ddof=1) if len(v) > 1 else 0.0
+        baris_ringkas.append(ringkas)
 
-        model = build_model().to(device)
-        model.load_state_dict(torch.load(model_path, map_location=device))
-        model.eval()
+    if not baris_ringkas:
+        raise RuntimeError("Tidak ada bobot model yang dapat dievaluasi.")
 
-        preds_all, labels_all = [], []
-        with torch.no_grad():
-            for imgs, labels in loader_test:
-                imgs = imgs.to(device)
-                preds_all.extend(model(imgs).argmax(1).cpu().numpy())
-                labels_all.extend(labels.numpy())
-
-        rows.append({
-            "alpha":           alpha,
-            "best_fold":       best_fold,
-            "accuracy":        accuracy_score(labels_all, preds_all),
-            "macro_precision": precision_score(labels_all, preds_all,
-                                               average='macro', zero_division=0),
-            "macro_recall":    recall_score(labels_all, preds_all,
-                                            average='macro', zero_division=0),
-            "macro_f1":        f1_score(labels_all, preds_all,
-                                        average='macro', zero_division=0),
-        })
-
-    print("\n" + "="*70)
-    print("TABEL PERBANDINGAN METRIK TEST SET ANTAR ALPHA")
-    print("="*70)
-    print(f"{'Alpha':>6}  {'Fold':>4}  {'Accuracy':>9}  {'Macro-P':>8}  "
-          f"{'Macro-R':>8}  {'Macro-F1':>9}")
-    for r in rows:
-        print(f"  {r['alpha']:>4}  {r['best_fold']:>4}  {r['accuracy']*100:8.2f}%  "
-              f"{r['macro_precision']:.4f}    {r['macro_recall']:.4f}    "
-              f"{r['macro_f1']:.4f}")
+    print("\n" + "=" * 78)
+    print("TABEL PERBANDINGAN METRIK TEST SET ANTAR ALPHA "
+          "(rata-rata ± std lintas fold)")
+    print("=" * 78)
+    print(f"{'Alpha':>6}{'Fold':>6}{'Accuracy':>18}{'Macro-P':>16}"
+          f"{'Macro-R':>16}{'Macro-F1':>16}")
+    for r in baris_ringkas:
+        print(f"  {r['alpha']:>4}{r['n_fold']:>6}"
+              f"{r['accuracy_mean']*100:>12.2f}±{r['accuracy_std']*100:<4.2f}"
+              f"{r['macro_precision_mean']:>11.4f}±{r['macro_precision_std']:<4.4f}"
+              f"{r['macro_recall_mean']:>10.4f}±{r['macro_recall_std']:<4.4f}"
+              f"{r['macro_f1_mean']:>10.4f}±{r['macro_f1_std']:<4.4f}")
 
     out_csv = os.path.join(save_dir, "alpha_comparison_test_metrics.csv")
     with open(out_csv, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=[
-            "alpha", "best_fold", "accuracy",
-            "macro_precision", "macro_recall", "macro_f1"])
+        writer = csv.DictWriter(f, fieldnames=["alpha", "n_fold"] +
+                                [f"{k}_{s}" for k in METRIK
+                                 for s in ("mean", "std")])
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows(baris_ringkas)
+
+    out_fold = os.path.join(save_dir, "alpha_comparison_per_fold.csv")
+    with open(out_fold, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["alpha", "fold", "val_f1"] + METRIK)
+        writer.writeheader()
+        writer.writerows(baris_fold)
+    print(f"\nRincian per fold disimpan: {out_fold}")
+
+    rows = baris_ringkas
     print(f"\nTabel disimpan: {out_csv}")
 
     return rows
