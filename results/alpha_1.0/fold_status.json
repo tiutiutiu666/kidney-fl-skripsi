@@ -2,31 +2,31 @@
   "fold_1": {
     "done": true,
     "metrics": {
-      "best_val_f1": 0.751175
+      "best_val_f1": 0.745817
     }
   },
   "fold_2": {
     "done": true,
     "metrics": {
-      "best_val_f1": 0.808804
+      "best_val_f1": 0.836594
     }
   },
   "fold_3": {
     "done": true,
     "metrics": {
-      "best_val_f1": 0.796037
+      "best_val_f1": 0.783208
     }
   },
   "fold_4": {
     "done": true,
     "metrics": {
-      "best_val_f1": 0.838762
+      "best_val_f1": 0.848345
     }
   },
   "fold_5": {
     "done": true,
     "metrics": {
-      "best_val_f1": 0.847216
+      "best_val_f1": 0.822784
     }
   }
 }
