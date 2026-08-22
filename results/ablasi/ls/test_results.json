@@ -1,0 +1,11 @@
+{
+  "konfigurasi": "ls",
+  "keterangan": "Label smoothing 0,1",
+  "train_acc_akhir": 0.999748,
+  "val_f1_terbaik": 0.836051,
+  "accuracy": 0.823343,
+  "macro_precision": 0.819865,
+  "macro_recall": 0.825117,
+  "macro_f1": 0.78859,
+  "selisih_train_test": 0.176405
+}

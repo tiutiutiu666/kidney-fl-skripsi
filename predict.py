@@ -21,7 +21,7 @@ from pytorch_grad_cam.utils.image import show_cam_on_image
 
 from config import (
     RESULT_DIR, KELAS_LIST, NUM_CLASSES, IMG_SIZE,
-    ALPHAS, K_FOLD, BASELINE_DIR
+    ALPHAS, K_FOLD, dir_alpha, dir_baseline
 )
 from src.models.efficientnet_model import build_model
 from src.data.preprocessing import get_transforms, GaussianDenoising
@@ -50,7 +50,7 @@ def find_best_model():
     # ── Coba cari model FL terbaik ────────────────────────────────────────────
     alpha_stats = {}
     for alpha in ALPHAS:
-        alpha_dir   = os.path.join(RESULT_DIR, f"alpha_{alpha}")
+        alpha_dir   = dir_alpha(alpha)
         status_path = os.path.join(alpha_dir, "fold_status.json")
         if not os.path.exists(status_path):
             continue
@@ -83,7 +83,7 @@ def find_best_model():
         best_alpha = max(alpha_stats, key=lambda a: alpha_stats[a]["avg_f1"])
         info       = alpha_stats[best_alpha]
         model_path = os.path.join(
-            RESULT_DIR, f"alpha_{best_alpha}",
+            dir_alpha(best_alpha),
             f"fold_{info['best_fold']}", "best_model.pth"
         )
         if os.path.exists(model_path):
@@ -99,7 +99,7 @@ def find_best_model():
             return state, desc
 
     # ── Fallback: model baseline ──────────────────────────────────────────────
-    baseline_path = os.path.join(BASELINE_DIR, "baseline_model.pth")
+    baseline_path = os.path.join(dir_baseline(), "best_model.pth")
     if os.path.exists(baseline_path):
         state = torch.load(baseline_path, map_location=DEVICE)
         desc  = {

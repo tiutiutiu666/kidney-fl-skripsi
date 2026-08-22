@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 from config import (ALPHAS, RESULT_DIR, TEST_SPLIT, SEED, NUM_CLIENTS,
-                    GROUP_AWARE_SPLIT)
+                    GROUP_AWARE_SPLIT, dir_alpha)
 from src.seeding import set_seed
 from src.data.data_loader import load_dataset
 from src.data.grouping import compute_group_labels, group_aware_holdout
@@ -15,11 +15,11 @@ from src.data.partitioner import dirichlet_partition
 from src.federated.server import run_simulation
 
 # ── GANTI untuk memilih alpha ────────────────────────────────────────────
-ALPHA_TARGET = 1.0   # pilih: 0.1 | 0.3 | 0.5 | 0.7 | 1.0
+ALPHA_TARGET = 0.3   # pilih: 0.1 | 0.3 | 0.5 | 0.7 | 1.0
 # ─────────────────────────────────────────────────────────────────────────────
 
 DEVICE     = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-RESULT_DIR_ALPHA = os.path.join(RESULT_DIR, f"alpha_{ALPHA_TARGET}")
+RESULT_DIR_ALPHA = dir_alpha(ALPHA_TARGET)
 os.makedirs(RESULT_DIR_ALPHA, exist_ok=True)
 
 set_seed()

@@ -2,14 +2,14 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import json
-from config import ALPHAS, RESULT_DIR, K_FOLD
+from config import ALPHAS, RESULT_DIR, K_FOLD, dir_alpha
 
 print("=" * 55)
 print("STATUS PROGRESS EKSPERIMEN")
 print("=" * 55)
 
 for alpha in ALPHAS:
-    alpha_dir   = os.path.join(RESULT_DIR, f"alpha_{alpha}")
+    alpha_dir   = dir_alpha(alpha)
     status_path = os.path.join(alpha_dir, "fold_status.json")
 
     print(f"\nα = {alpha}")

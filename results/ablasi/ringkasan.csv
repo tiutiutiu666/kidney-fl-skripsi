@@ -1,0 +1,8 @@
+konfigurasi,keterangan,train_acc_akhir,val_f1_terbaik,accuracy,macro_precision,macro_recall,macro_f1,selisih_train_test
+dasar,Sesuai Tabel 3.1 dan 3.2 proposal,0.998108,0.822026,0.804684,0.776146,0.814021,0.774158,0.193424
+augmentasi,Augmentasi diperkuat,0.997099,0.86175,0.845971,0.833286,0.842892,0.811661,0.151128
+wd,Weight decay 1e-4 (AdamW),0.998108,0.822026,0.804684,0.776146,0.814021,0.774158,0.193424
+ls,"Label smoothing 0,1",0.999748,0.836051,0.823343,0.819865,0.825117,0.78859,0.176405
+gabungan,Augmentasi kuat + weight decay + label smoothing,0.998613,0.845066,0.891624,0.878851,0.851714,0.859867,0.106989
+mask_tubuh,"Mask tubuh, augmentasi standar",0.999369,0.77696,0.881302,0.870605,0.840196,0.850182,0.118067
+gabungan_mask,Gabungan + mask tubuh,0.999243,0.770074,0.847956,0.84211,0.853135,0.817439,0.151287

@@ -31,3 +31,6 @@ miniconda.sh
 *.tar.gz
 *.zip
 results_skenario1*/
+
+# Hasil ablation (dihasilkan ulang lewat experiments/ablasi_regularisasi.py)
+results/ablasi/*/best_model.pth

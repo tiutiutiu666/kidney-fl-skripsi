@@ -14,7 +14,8 @@ import torch
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-from config import ALPHAS, RESULT_DIR, TEST_SPLIT, SEED, GROUP_AWARE_SPLIT
+from config import (ALPHAS, RESULT_DIR, TEST_SPLIT, SEED, GROUP_AWARE_SPLIT,
+                    dir_alpha, dir_final)
 from src.seeding import set_seed
 from src.data.data_loader import load_dataset
 from src.data.grouping import compute_group_labels, group_aware_holdout
@@ -99,7 +100,7 @@ if __name__ == "__main__":
         print(f"EKSPERIMEN α = {alpha}")
         print(f"{'='*60}")
 
-        result_dir_alpha = os.path.join(RESULT_DIR, f"alpha_{alpha}")
+        result_dir_alpha = dir_alpha(alpha)
         os.makedirs(result_dir_alpha, exist_ok=True)
 
         partitions = dirichlet_partition(idx_tv, all_labels, alpha)
@@ -130,7 +131,7 @@ if __name__ == "__main__":
     print(f"\n{'='*60}")
     print("EVALUASI AKHIR — TEST SET")
     print(f"{'='*60}")
-    final_dir = os.path.join(RESULT_DIR, "final")
+    final_dir = dir_final()
     full_evaluation(
         model_state=best_state,
         paths_test=all_paths[idx_test],

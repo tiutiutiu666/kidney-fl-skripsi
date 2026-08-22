@@ -1,0 +1,11 @@
+{
+  "konfigurasi": "gabungan",
+  "keterangan": "Augmentasi kuat + weight decay + label smoothing",
+  "train_acc_akhir": 0.998613,
+  "val_f1_terbaik": 0.845066,
+  "accuracy": 0.891624,
+  "macro_precision": 0.878851,
+  "macro_recall": 0.851714,
+  "macro_f1": 0.859867,
+  "selisih_train_test": 0.106989
+}

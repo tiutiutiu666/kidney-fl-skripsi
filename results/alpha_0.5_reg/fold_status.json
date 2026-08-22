@@ -1,0 +1,32 @@
+{
+  "fold_1": {
+    "done": true,
+    "metrics": {
+      "best_val_f1": 0.781667
+    }
+  },
+  "fold_2": {
+    "done": true,
+    "metrics": {
+      "best_val_f1": 0.963279
+    }
+  },
+  "fold_3": {
+    "done": true,
+    "metrics": {
+      "best_val_f1": 0.779807
+    }
+  },
+  "fold_4": {
+    "done": true,
+    "metrics": {
+      "best_val_f1": 0.835905
+    }
+  },
+  "fold_5": {
+    "done": true,
+    "metrics": {
+      "best_val_f1": 0.855789
+    }
+  }
+}

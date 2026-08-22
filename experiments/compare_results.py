@@ -14,10 +14,10 @@ import json
 import csv
 import numpy as np
 import torch
-from config import ALPHAS, RESULT_DIR, K_FOLD
+from config import ALPHAS, RESULT_DIR, K_FOLD, dir_alpha, dir_final
 from src.evaluation.evaluate import evaluate_all_alphas
 
-FINAL_DIR = os.path.join(RESULT_DIR, "final")
+FINAL_DIR = dir_final()
 os.makedirs(FINAL_DIR, exist_ok=True)
 
 rows = []
@@ -28,7 +28,7 @@ print(f"{'Alpha':>6}  {'Fold':>4}  {'Best Val F1':>11}  {'Status':>10}")
 print("=" * 65)
 
 for alpha in ALPHAS:
-    alpha_dir   = os.path.join(RESULT_DIR, f"alpha_{alpha}")
+    alpha_dir   = dir_alpha(alpha)
     status_path = os.path.join(alpha_dir, "fold_status.json")
     status      = {}
     if os.path.exists(status_path):

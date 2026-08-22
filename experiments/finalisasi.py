@@ -31,7 +31,7 @@ import numpy as np
 import torch
 
 from config import (RESULT_DIR, ALPHAS, K_FOLD, TEST_SPLIT, SEED,
-                    GROUP_AWARE_SPLIT)
+                    GROUP_AWARE_SPLIT, dir_alpha, dir_final)
 from src.seeding import set_seed
 from src.data.data_loader import load_dataset
 from src.evaluation.evaluate import (select_best_model, full_evaluation,
@@ -50,7 +50,7 @@ def ringkas_progres():
 
     ada = False
     for alpha in ALPHAS:
-        path = os.path.join(RESULT_DIR, f"alpha_{alpha}", "fold_status.json")
+        path = os.path.join(dir_alpha(alpha), "fold_status.json")
         if not os.path.exists(path):
             print(f"  alpha {alpha}: belum dimulai")
             continue
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     print(f"\n{'='*60}")
     print("EVALUASI AKHIR — TEST SET")
     print(f"{'='*60}")
-    final_dir = os.path.join(RESULT_DIR, "final")
+    final_dir = dir_final()
     full_evaluation(
         model_state=best_state,
         paths_test=all_paths[idx_test],

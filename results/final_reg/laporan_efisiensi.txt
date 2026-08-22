@@ -1,0 +1,3 @@
+Total Parameter : 4,012,672
+FLOPs (approx)  : 0.769 GFLOPs
+Waktu Inferensi : 2.049 ms/citra

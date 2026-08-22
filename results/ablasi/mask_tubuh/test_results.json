@@ -1,0 +1,11 @@
+{
+  "konfigurasi": "mask_tubuh",
+  "keterangan": "Mask tubuh, augmentasi standar",
+  "train_acc_akhir": 0.999369,
+  "val_f1_terbaik": 0.77696,
+  "accuracy": 0.881302,
+  "macro_precision": 0.870605,
+  "macro_recall": 0.840196,
+  "macro_f1": 0.850182,
+  "selisih_train_test": 0.118067
+}

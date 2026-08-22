@@ -1,0 +1,11 @@
+{
+  "konfigurasi": "augmentasi",
+  "keterangan": "Augmentasi diperkuat",
+  "train_acc_akhir": 0.997099,
+  "val_f1_terbaik": 0.86175,
+  "accuracy": 0.845971,
+  "macro_precision": 0.833286,
+  "macro_recall": 0.842892,
+  "macro_f1": 0.811661,
+  "selisih_train_test": 0.151128
+}

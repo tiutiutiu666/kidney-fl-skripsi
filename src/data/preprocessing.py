@@ -1,6 +1,7 @@
 from torchvision import transforms
 from PIL import ImageFilter
-from config import IMG_SIZE, DENOISE_SIGMA
+from config import (IMG_SIZE, DENOISE_SIGMA, AUG_ROTATION, AUG_TRANSLATE,
+                    AUG_SCALE, AUG_BRIGHTNESS, AUG_CONTRAST)
 
 
 class GaussianDenoising:
@@ -27,15 +28,20 @@ def get_transforms():
     _mean = [0.485, 0.456, 0.406]
     _std  = [0.229, 0.224, 0.225]
 
+    # Parameter augmentasi diambil dari config agar dapat diperkuat lewat flag
+    # REGULARISASI_KUAT tanpa mengubah teknik yang dipakai. Teknik tetap lima
+    # macam sesuai Tabel 3.1 proposal; hanya rentangnya yang berubah, kecuali
+    # contrast yang bernilai 0 pada konfigurasi standar sehingga tidak aktif.
     transform_train = transforms.Compose([
         transforms.Resize((IMG_SIZE, IMG_SIZE)),
         GaussianDenoising(sigma=DENOISE_SIGMA),
         transforms.RandomHorizontalFlip(p=0.5),
-        transforms.RandomRotation(15),
+        transforms.RandomRotation(AUG_ROTATION),
         transforms.RandomAffine(degrees=0,
-                                translate=(0.1, 0.1),
-                                scale=(0.9, 1.1)),
-        transforms.ColorJitter(brightness=0.1),
+                                translate=(AUG_TRANSLATE, AUG_TRANSLATE),
+                                scale=AUG_SCALE),
+        transforms.ColorJitter(brightness=AUG_BRIGHTNESS,
+                               contrast=AUG_CONTRAST),
         transforms.ToTensor(),
         transforms.Normalize(mean=_mean, std=_std),
     ])

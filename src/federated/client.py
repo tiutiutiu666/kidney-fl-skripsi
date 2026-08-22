@@ -11,7 +11,8 @@ import flwr as fl
 from src.data.augmentation import KidneyDataset
 from src.models.efficientnet_model import build_model
 from src.seeding import set_seed
-from config import LOCAL_EPOCHS, LR, BATCH_SIZE, MU_FEDPROX, SEED
+from config import (LOCAL_EPOCHS, LR, BATCH_SIZE, MU_FEDPROX, SEED,
+                    LABEL_SMOOTHING)
 
 
 # ── Utilitas konversi parameter ────────────────────────────────────────────────
@@ -80,7 +81,10 @@ class KidneyFlowerClient(fl.client.NumPyClient):
             batch_size=BATCH_SIZE, shuffle=True, num_workers=0
         )
 
-        criterion = nn.CrossEntropyLoss()
+        # Label smoothing hanya diterapkan pada loss PELATIHAN. Loss validasi
+        # (metode evaluate di bawah) tetap memakai cross-entropy biasa agar
+        # nilainya sebanding dengan eksperimen tanpa regularisasi tambahan.
+        criterion = nn.CrossEntropyLoss(label_smoothing=LABEL_SMOOTHING)
         optimizer = torch.optim.Adam(self.model.parameters(), lr=LR)
         self.model.train()
         total_train_loss = 0.0

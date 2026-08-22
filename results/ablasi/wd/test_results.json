@@ -1,0 +1,11 @@
+{
+  "konfigurasi": "wd",
+  "keterangan": "Weight decay 1e-4 (AdamW)",
+  "train_acc_akhir": 0.998108,
+  "val_f1_terbaik": 0.822026,
+  "accuracy": 0.804684,
+  "macro_precision": 0.776146,
+  "macro_recall": 0.814021,
+  "macro_f1": 0.774158,
+  "selisih_train_test": 0.193424
+}

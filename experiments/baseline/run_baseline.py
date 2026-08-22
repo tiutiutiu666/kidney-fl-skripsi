@@ -15,7 +15,7 @@ from sklearn.metrics import (confusion_matrix, classification_report,
 
 from config import (RESULT_DIR, TEST_SPLIT, SEED, BATCH_SIZE,
                     LR, KELAS_LIST, IMG_SIZE, NUM_CLASSES,
-                    GROUP_AWARE_SPLIT)
+                    GROUP_AWARE_SPLIT, LABEL_SMOOTHING, dir_baseline)
 from src.seeding import set_seed
 from src.data.data_loader import load_dataset
 from src.data.grouping import compute_group_labels, group_aware_holdout
@@ -29,7 +29,7 @@ import torch.optim as optim
 
 EPOCHS   = 10
 DEVICE   = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-SAVE_DIR = os.path.join(RESULT_DIR, "baseline")
+SAVE_DIR = dir_baseline()
 os.makedirs(SAVE_DIR, exist_ok=True)
 
 set_seed()
@@ -78,7 +78,10 @@ loader_test = DataLoader(
 
 # ── Model ─────────────────────────────────────────────────────────────────────
 model     = build_model().to(DEVICE)
-criterion = nn.CrossEntropyLoss()
+# Label smoothing hanya pada loss pelatihan; loss validasi memakai
+# cross-entropy biasa agar nilainya sebanding antar konfigurasi.
+criterion      = nn.CrossEntropyLoss(label_smoothing=LABEL_SMOOTHING)
+criterion_eval = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=LR)
 scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.5)
 
@@ -129,7 +132,7 @@ for epoch in range(1, EPOCHS + 1):
         for imgs, labels in loader_val:
             imgs, labels = imgs.to(DEVICE), labels.to(DEVICE)
             out   = model(imgs)
-            loss  = criterion(out, labels)
+            loss  = criterion_eval(out, labels)
             v_loss    += loss.item() * imgs.size(0)
             v_correct += (out.argmax(1) == labels).sum().item()
             v_preds.extend(out.argmax(1).cpu().numpy())

@@ -16,7 +16,7 @@ from src.data.augmentation import KidneyDataset
 from src.data.preprocessing import get_transforms
 from config import (BATCH_SIZE, NUM_CLASSES, KELAS_LIST,
                     RESULT_DIR, IMG_SIZE, ALPHAS, K_FOLD,
-                    GROUP_AWARE_SPLIT)
+                    GROUP_AWARE_SPLIT, dir_alpha, dir_final)
 
 
 def select_best_model(device):
@@ -34,7 +34,7 @@ def select_best_model(device):
     alpha_stats = {}  # alpha -> {avg_f1, best_fold, best_fold_f1, num_done}
 
     for alpha in ALPHAS:
-        alpha_dir   = os.path.join(RESULT_DIR, f"alpha_{alpha}")
+        alpha_dir   = dir_alpha(alpha)
         status_path = os.path.join(alpha_dir, "fold_status.json")
         if not os.path.exists(status_path):
             continue
@@ -71,7 +71,7 @@ def select_best_model(device):
     info       = alpha_stats[best_alpha]
 
     # Muat bobot dari fold terbaik pada alpha terpilih
-    model_path = os.path.join(RESULT_DIR, f"alpha_{best_alpha}",
+    model_path = os.path.join(dir_alpha(best_alpha),
                               f"fold_{info['best_fold']}", "best_model.pth")
     best_state = torch.load(model_path, map_location=device)
 
@@ -106,7 +106,7 @@ def full_evaluation(model_state, paths_test, labels_test, device,
     accuracy, precision, recall, F1, confusion matrix, efisiensi.
     """
     if save_dir is None:
-        save_dir = os.path.join(RESULT_DIR, "final")
+        save_dir = dir_final()
     os.makedirs(save_dir, exist_ok=True)
 
     _, transform_val = get_transforms()
@@ -210,7 +210,7 @@ def evaluate_all_alphas(device, save_dir=None):
     from src.data.data_loader import load_dataset
 
     if save_dir is None:
-        save_dir = os.path.join(RESULT_DIR, "final")
+        save_dir = dir_final()
     os.makedirs(save_dir, exist_ok=True)
 
     all_paths, all_labels = load_dataset()
@@ -267,7 +267,7 @@ def evaluate_all_alphas(device, save_dir=None):
     # menyediakan batas galat untuk pembahasan.
     baris_fold, baris_ringkas = [], []
     for alpha in ALPHAS:
-        alpha_dir   = os.path.join(RESULT_DIR, f"alpha_{alpha}")
+        alpha_dir   = dir_alpha(alpha)
         status_path = os.path.join(alpha_dir, "fold_status.json")
         if not os.path.exists(status_path):
             continue
@@ -348,11 +348,11 @@ def plot_training_curves(save_dir=None):
     import pandas as pd
 
     if save_dir is None:
-        save_dir = os.path.join(RESULT_DIR, "final")
+        save_dir = dir_final()
     os.makedirs(save_dir, exist_ok=True)
 
     for alpha in ALPHAS:
-        alpha_dir = os.path.join(RESULT_DIR, f"alpha_{alpha}")
+        alpha_dir = dir_alpha(alpha)
 
         fig, axes = plt.subplots(1, 2, figsize=(14, 5))
         fig.suptitle(f'Kurva Training \u2014 \u03b1 = {alpha}',

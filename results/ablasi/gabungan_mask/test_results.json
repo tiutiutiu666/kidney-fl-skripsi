@@ -1,0 +1,11 @@
+{
+  "konfigurasi": "gabungan_mask",
+  "keterangan": "Gabungan + mask tubuh",
+  "train_acc_akhir": 0.999243,
+  "val_f1_terbaik": 0.770074,
+  "accuracy": 0.847956,
+  "macro_precision": 0.84211,
+  "macro_recall": 0.853135,
+  "macro_f1": 0.817439,
+  "selisih_train_test": 0.151287
+}
